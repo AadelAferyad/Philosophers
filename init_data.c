@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 17:05:11 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/04/19 13:53:56 by aaferyad         ###   ########.fr       */
+/*   Created: 2025/04/20 13:51:28 by aaferyad          #+#    #+#             */
+/*   Updated: 2025/04/20 19:52:53 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int	main(int ac, char **av)
+void	init(t_table *table)
 {
-	t_table	table_info;
+	int	i;
 
-	if (ac != 5 && ac != 6)
-		print_error("Invalid number of arguments\n");
-	parser(&table_info, av);
-	init(&table_info);
-	return (0);
+	i = 0;
+	table->philos = allocation(table->nb_philo * sizeof(t_philo));
+	while (i < table->nb_philo)
+		table->philos[i].id = i++;
 }

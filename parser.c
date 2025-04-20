@@ -24,7 +24,7 @@ static int	is_space(char c)
 int	ascii_to_int(char *str)
 {
 	int	i;
-	int	n;
+	long	n;
 	int	len;
 
 	i = 0;
@@ -44,9 +44,9 @@ int	ascii_to_int(char *str)
 		len++;
 		i++;
 	}
-	if (len > 10)
+	if (len > 10 || n > INT_MAX)
 		print_error("Invalid argument the value is to big then INT_MAX\n");
-	return (n);
+	return ((int) n);
 }
 
 void	parser(t_table *table_info, char **av)
