@@ -21,3 +21,8 @@ void	*allocation(unsigned int bytes)
 		print_error("Malloc failed\n");
 	return (ptr);
 }
+
+void	cleanup(t_table *table)
+{
+	free(table->philos);
+}
