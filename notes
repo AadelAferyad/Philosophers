@@ -1,0 +1,21 @@
+we have the cpu is running it's cycle normaly (fetch, decode, execute, store)
+	fetch : cpu grabs the next instruction from memory using program counter PC (keeps track of instructions location in memory)
+	decode: cpu figures out what operation needs to be performed
+	execute:cpu perform the operation which can be arithmetic or logic or transfer data
+	store : cpu stores a resualt if the instruction have one, It may be stored in a register or memory.
+
+context swtiching: when cpu stops executing one thread or process and start executing another, it first saves the stat of the current (thread/process) so it can be resumed later
+	when switching the os saves:
+		CPU registers
+		Program Counter (PC)
+		Stack Pointer (SP)
+		...
+	Type of context swithing:
+		preempitive Scheduling		time slice expired
+		Blocking syscall		caling read() and block on I/O
+		Manual Yield()			calling sched_yield() (rescheduling simply the thread can be in one of three states running,ready or blocked.
+											Yield is a syscall moves the caller from running to the ready state )
+		Inturrept/signal		Hardware needs attention
+		Mutex/Lock contention		Thread waits for lock
+
+

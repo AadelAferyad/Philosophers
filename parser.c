@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:33:49 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/04/22 14:18:51 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:07:32 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,18 @@ int	ascii_to_int(char *str)
 	return ((int) n);
 }
 
-void	parser(t_table *table_info, char **av)
+void	parser(simulation *data, char **av)
 {
-	table_info->nb_philo = (unsigned int) ascii_to_int(av[1]);
-	table_info->time_to_die = (unsigned int) ascii_to_int(av[2]);
-	table_info->time_to_eat = (unsigned int) ascii_to_int(av[3]);
-	table_info->time_to_sleep = (unsigned int) ascii_to_int(av[4]);
+	int	*tmp;
+
+	data->n_philo = (unsigned int) ascii_to_int(av[1]);
+	data->t_die = (unsigned int) ascii_to_int(av[2]);
+	data->t_eat = (unsigned int) ascii_to_int(av[3]);
+	data->t_sleep = (unsigned int) ascii_to_int(av[4]);
+	tmp = get_time_to_sleep();
+	*tmp= data->t_sleep;
+	tmp = get_time_to_eat();
+	*tmp = data->t_eat;
 	if (av[5])
-		table_info->n_diner = (unsigned int) ascii_to_int(av[5]);
+		data->n_simulation = ascii_to_int(av[5]);
 }

@@ -22,7 +22,8 @@ void	*allocation(unsigned int bytes)
 	return (ptr);
 }
 
-void	cleanup(t_table *table)
+void	cleanup(simulation *data)
 {
-	free(table->philos);
+	return ;
+	/*free(data->);*/
 }
