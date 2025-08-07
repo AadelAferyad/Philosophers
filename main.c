@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:05:11 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/07/30 18:56:50 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:59:13 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 int	main(int ac, char **av)
 {
-	simulation data;
+	t_sim	data;
 
 	if (ac != 5 && ac != 6)
-		print_error("Invalid number of arguments\n");
-	parser(&data, av);
-	init(&data);
+		print_error_exit("Invalid number of arguments");
+	if (parser(&data, av))
+		return (1);
+	if (init(&data))
+		return (1);
+	dinning(data);
 	return (0);
 }

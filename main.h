@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:49:08 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/07/30 18:06:36 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/07 15:42:43 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,48 +19,59 @@
 # include <limits.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <stdbool.h>
 
 # define RED "\033[31m"
 # define GREEN "\033[32m"
 # define RESET "\033[0m"
 
-# define true 1
-# define false 0
+typedef struct philosopher t_ph;
 
 typedef struct	philo_forks
 {
 	int	fork_id;
 	pthread_mutex_t	fork;
-} forks;
-
-typedef struct	philosopher
-{
-	int	id;
-	pthread_t	thread;
-	int	meal_count;
-	forks	*main_fork;
-	forks	*next_fork;
-} ph;
+} t_forks;
 
 typedef struct	parsed_data
 {
-	ph	*philo;
-	forks	*fork;
+	t_forks	*forks;
+	t_ph	*philos;
 	unsigned int	n_philo;
 	unsigned int	t_die;
 	unsigned int	t_eat;
 	unsigned int	t_sleep;
 	int	n_simulation;
-} simulation;
+	time_t	simulation_starts;
+	bool	end_simulation;
+	pthread_mutex_t	end_simulation_mutex;
+	pthread_mutex_t	print;
+} t_sim;
 
+struct	philosopher
+{
+	int	id;
+	pthread_t	thread;
+	unsigned int	diner_counter;
+	bool	full;
+	unsigned int	last_diner;
+	t_forks	*main_fork;
+	t_forks	*next_fork;
+	t_sim	*data;
+};
 
-void	init(simulation *data);
-void	parser(simulation *info, char **av);
+int	init(t_sim *data);
+int	parser(t_sim *info, char **av);
 void	print_error(char *msg);
 void	*allocation(unsigned int bytes);
-void	cleanup(simulation *data);
+void	cleanup(t_sim *data);
 int	*is_simulation_start(void);
 int	*get_time_to_sleep(void);
 int	*get_time_to_eat(void);
+int	print_error_exit(char *error, int exit_code);
+int	dinning(t_sim *data);
+int	full_cleanup(t_sim *data);
+int	_usleep(long usec);
+long	_gettime(void);
 
 #endif

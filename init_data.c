@@ -6,112 +6,87 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:51:28 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/07/30 18:58:41 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:57:36 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	thining(int philos_id)
+static void	assign_forks(t_ph *philo, t_forks *forks, int pos)
 {
-	printf("philospher %d: thinking\n", philos_id);
-}
+	int	n_ph;
 
-void	sleeping(int philos_id)
-{
-	printf("philospher %d: is sleeping %d\n", philos_id, *get_time_to_sleep());
-	usleep(*get_time_to_sleep());
-}
-
-void	eating(ph *philo)
-{
-	pthread_mutex_lock(&philo->main_fork->fork);
-	pthread_mutex_lock(&philo->next_fork->fork);
-	printf("philospher %d: is eating\n", philo->id);
-	usleep(*get_time_to_eat());
-	pthread_mutex_unlock(&philo->main_fork->fork);
-	pthread_mutex_unlock(&philo->next_fork->fork);
-}
-
-void	*philo_cycle(void *tmp)
-{
-	ph	*philo;
-
-	philo = (ph *) tmp;
-	while (!(*is_simulation_start()))
-		;
-	while (1)
+	n_ph = philo->data->n_philo;
+	philo->main_fork = &forks[(pos + 1) % n_ph];
+	philo->next_fork = &forks[pos];
+	if (philo->id % 2 == 0)
 	{
-		thining(philo->id);
-		sleeping(philo->id);
-		eating(philo);
+		philo->main_fork = &forks[pos];
+		philo->next_fork = &forks[(pos + 1) % n_ph];
 	}
-	return (NULL);
 }
 
-void	init_threads(simulation *data)
+static void	init_philo(t_sim *data)
 {
 	int	i;
-	int	*start;
-	int	th;
+	t_ph	*philo;
 
-	i = 0;
-	while (++i <= data->n_philo)
-		data->philo[i - 1].id = i;
 	i = 0;
 	while (i < data->n_philo)
 	{
-		th = pthread_create(&data->philo[i].thread, NULL, (void *) philo_cycle, &data->philo[i]);
-		if (th != 0)
+		philo = data->philos + i;
+		philo->id = i + 1;
+		philo->full = 0;
+		philo->diner_counter = 0;
+		philo->data = data;
+		assign_forks(philo, data->forks, i);
+		i++;
+	}
+
+}
+
+int	init_forks(t_sim *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->n_philo)
+	{
+		data->forks[i].fork_id = i + 1;
+		if (pthread_mutex_init(&data->forks[i].fork, NULL) != 0)
 		{
-			cleanup(data);
-			print_error("Could't create a thread\n");
+			while (--i >= 0)
+				pthread_mutex_destroy(&data->forks[i].fork);
+			return (1);
 		}
+
 		i++;
 	}
-	start = is_simulation_start();
-	*start = true;
+	return (0);
 }
 
-void	init_forks(simulation *data)
+int	init(t_sim *data)
 {
-	int	i;
-
-	i = 0;
-	data->fork = allocation(data->n_philo * sizeof(forks));
-	while (i < data->n_philo)
+	data->end_simulation = false;
+	if (pthread_mutex_init(&data->end_simulation_mutex, NULL) != 0)
 	{
-		data->fork[i].fork_id = i + 1;
-		pthread_mutex_init(&data->fork[i].fork, NULL);
-		i++;
+		cleanup(data);
+		return (1);
 	}
-}
-/*
- * [1|2|3|4|5]
- * [1|2|3|4|5]
- * */
-void	init_pointer(simulation *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->n_philo)
+	data->philos = malloc(data->n_philo * sizeof(t_ph));
+	if (!data->philos)
+		print_error_exit("malloc failed");
+	data->forks = malloc(data->n_philo * sizeof(t_forks));
+	if (!data->philos)
 	{
-		data->philo[i].main_fork = &data->fork[i];
-		if (i + 1 < data->n_philo)
-			data->philo[i].next_fork = &data->fork[i + 1];
-		else
-			data->philo[i].next_fork = &data->fork[0];
-		i++;
+		free(data->philos);
+		print_error_exit("malloc failed");
 	}
-}
-
-void	init(simulation *data)
-{
-	int	i;
-
-	data->philo = allocation(data->n_philo * sizeof(ph));
-	init_threads(data);
-	init_forks(data);
-	init_pointer(data);
+	if (init_forks(data))
+	{
+		cleanup(data);
+		return (1);
+	}
+	init_philo(data);
+	return (0);
 }
