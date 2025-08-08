@@ -25,53 +25,60 @@
 # define GREEN "\033[32m"
 # define RESET "\033[0m"
 
-typedef struct philosopher t_ph;
+typedef struct s_philosopher	t_ph;
 
-typedef struct	philo_forks
+typedef struct s_philo_forks
 {
-	int	fork_id;
+	int		fork_id;
 	pthread_mutex_t	fork;
 } t_forks;
 
-typedef struct	parsed_data
+typedef struct s_parsed_data
 {
 	t_forks	*forks;
 	t_ph	*philos;
-	unsigned int	n_philo;
-	unsigned int	t_die;
-	unsigned int	t_eat;
-	unsigned int	t_sleep;
-	int	n_simulation;
+	int		n_philo;
+	int		t_die;
+	int		t_eat;
+	int		t_sleep;
+	int		n_simulation;
+	bool	started;
 	time_t	simulation_starts;
 	bool	end_simulation;
 	pthread_mutex_t	end_simulation_mutex;
 	pthread_mutex_t	print;
 } t_sim;
 
-struct	philosopher
+struct	s_philosopher
 {
-	int	id;
-	pthread_t	thread;
-	unsigned int	diner_counter;
-	bool	full;
-	unsigned int	last_diner;
-	t_forks	*main_fork;
-	t_forks	*next_fork;
-	t_sim	*data;
+	int			id;
+	pthread_t			thread;
+	unsigned int			diner_counter;
+	bool		full;
+	time_t		last_diner;
+	t_forks		*main_fork;
+	t_forks		*next_fork;
+	t_sim		*data;
 };
 
-int	init(t_sim *data);
-int	parser(t_sim *info, char **av);
+int		init(t_sim *data);
+int		parser(t_sim *info, char **av);
 void	print_error(char *msg);
 void	*allocation(unsigned int bytes);
 void	cleanup(t_sim *data);
-int	*is_simulation_start(void);
-int	*get_time_to_sleep(void);
-int	*get_time_to_eat(void);
-int	print_error_exit(char *error, int exit_code);
-int	dinning(t_sim *data);
-int	full_cleanup(t_sim *data);
-int	_usleep(long usec);
-long	_gettime(void);
-
+bool	is_simulation_start(t_sim *data);
+int		*get_time_to_sleep(void);
+int		*get_time_to_eat(void);
+int		print_error_return(char *error, int return_code);
+int		dinning(t_sim *data);
+int		full_cleanup(t_sim *data);
+int		_usleep(time_t usec, t_sim *data, t_ph *philo);
+int		print_death(t_ph *philo, long current);
+time_t	_gettime(void);
+int		check_death(t_ph *philo);
+int		destroy_mutex(t_sim *data);
+int		check_death(t_ph *philo);
+bool	is_done(t_sim *data);
+int		lock_mutex(pthread_mutex_t *lock);
+int		unlock_mutex(pthread_mutex_t *lock);
 #endif

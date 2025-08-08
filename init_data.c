@@ -38,7 +38,10 @@ static void	init_philo(t_sim *data)
 		philo->id = i + 1;
 		philo->full = 0;
 		philo->diner_counter = 0;
+		philo->last_diner = 0;
 		philo->data = data;
+		data->simulation_starts = 0;
+		data->started = 0;
 		assign_forks(philo, data->forks, i);
 		i++;
 	}
@@ -62,6 +65,11 @@ int	init_forks(t_sim *data)
 
 		i++;
 	}
+	if (pthread_mutex_init(&data->print, NULL) != 0)
+	{
+		cleanup(data);
+		return (1);
+	}
 	return (0);
 }
 
@@ -75,12 +83,12 @@ int	init(t_sim *data)
 	}
 	data->philos = malloc(data->n_philo * sizeof(t_ph));
 	if (!data->philos)
-		print_error_exit("malloc failed");
+		return (print_error_return("malloc failed", 1));
 	data->forks = malloc(data->n_philo * sizeof(t_forks));
 	if (!data->philos)
 	{
 		free(data->philos);
-		print_error_exit("malloc failed");
+		return (print_error_return("malloc failed", 1));
 	}
 	if (init_forks(data))
 	{

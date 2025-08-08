@@ -17,11 +17,15 @@ int	main(int ac, char **av)
 	t_sim	data;
 
 	if (ac != 5 && ac != 6)
-		print_error_exit("Invalid number of arguments");
+		return (print_error_return("Invalid number of arguments", 1));
 	if (parser(&data, av))
 		return (1);
 	if (init(&data))
 		return (1);
-	dinning(data);
+	if (dinning(&data))
+	{
+		full_cleanup(&data);
+		return (1);
+	}
 	return (0);
 }

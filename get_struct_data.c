@@ -12,29 +12,22 @@
 
 #include "main.h"
 
-int	*is_simulation_start(void)
+bool	is_done(t_sim *data)
 {
-	static int	start;
-	static int	init_static;
+	bool	is;
 
-	if (init_static == 0)
-	{
-		start = false;
-		init_static = 1;
-	}
-	return (&start);
+	lock_mutex(&data->end_simulation_mutex);
+	is = data->end_simulation;
+	unlock_mutex(&data->end_simulation_mutex);
+	return (is);
 }
 
-int	*get_time_to_sleep(void)
+bool	is_simulation_start(t_sim *data)
 {
-	static int	time_to_sleep;
+	bool	is;
 
-	return (&time_to_sleep);
-}
-
-int	*get_time_to_eat(void)
-{
-	static int	time_to_eat;
-
-	return (&time_to_eat);
+	lock_mutex(&data->end_simulation_mutex);
+	is = data->started;
+	unlock_mutex(&data->end_simulation_mutex);
+	return (is);
 }
