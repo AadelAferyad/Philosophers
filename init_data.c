@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:51:28 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/08/07 14:57:36 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:20:30 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	assign_forks(t_ph *philo, t_forks *forks, int pos)
 
 static void	init_philo(t_sim *data)
 {
-	int	i;
+	int		i;
 	t_ph	*philo;
 
 	i = 0;
@@ -45,7 +45,6 @@ static void	init_philo(t_sim *data)
 		assign_forks(philo, data->forks, i);
 		i++;
 	}
-
 }
 
 int	init_forks(t_sim *data)
@@ -62,7 +61,6 @@ int	init_forks(t_sim *data)
 				pthread_mutex_destroy(&data->forks[i].fork);
 			return (1);
 		}
-
 		i++;
 	}
 	if (pthread_mutex_init(&data->print, NULL) != 0)

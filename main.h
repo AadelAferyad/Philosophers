@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:49:08 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/08/07 15:42:43 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:55:54 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ struct	s_philosopher
 {
 	int			id;
 	pthread_t			thread;
-	unsigned int			diner_counter;
+	int			diner_counter;
 	bool		full;
 	time_t		last_diner;
 	t_forks		*main_fork;
@@ -63,7 +63,6 @@ struct	s_philosopher
 
 int		init(t_sim *data);
 int		parser(t_sim *info, char **av);
-void	print_error(char *msg);
 void	*allocation(unsigned int bytes);
 void	cleanup(t_sim *data);
 bool	is_simulation_start(t_sim *data);
@@ -81,4 +80,10 @@ int		check_death(t_ph *philo);
 bool	is_done(t_sim *data);
 int		lock_mutex(pthread_mutex_t *lock);
 int		unlock_mutex(pthread_mutex_t *lock);
+
+int	eating(t_ph *philo);
+int 	philos_life(t_ph *philo);
+int	lock_print(t_ph *philo, char *status);
+int	print_status(char *status, t_ph *philo);
+void	*philo_cycle(void *tmp);
 #endif
