@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:09:51 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/08/09 16:02:08 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:07:09 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	philos_life(t_ph *philo)
 {
 	if (check_death(philo))
 		return (1);
-	if (philo->full)
-		return (1);
+	/*if (philo->full)*/
+	/*	return (1);*/
 	if (lock_print(philo, "is sleeping") != 0)
 		return (1);
 	if (check_death(philo))

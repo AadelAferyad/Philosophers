@@ -6,7 +6,7 @@
 /*   By: aaferyad <aaferyad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:50:47 by aaferyad          #+#    #+#             */
-/*   Updated: 2025/08/09 16:03:44 by aaferyad         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:08:44 by aaferyad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	eating_helper(t_ph *philo)
 {
 	if (check_death(philo))
-		return (1);
-	if (philo->full)
 		return (1);
 	if (lock_mutex(&philo->main_fork->fork) != 0)
 		return (1);
@@ -54,6 +52,9 @@ int	eating(t_ph *philo)
 		return (1);
 	if (unlock_mutex(&philo->next_fork->fork) != 0)
 		return (1);
+	if (philo->data->n_simulation != -1
+		&& philo->diner_counter >= philo->data->n_simulation)
+		return (1);
 	return (0);
 }
 
@@ -68,11 +69,7 @@ void	single_philo(t_ph *philo)
 
 int	cheker(t_ph *philo)
 {
-	if (philo->full)
-		return (1);
 	if (check_death(philo))
-		return (1);
-	if (philo->full)
 		return (1);
 	if (philo->id % 2)
 		usleep(250);
